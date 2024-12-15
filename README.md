@@ -7,6 +7,12 @@ Scaffold-DbContext -Connection "Data Source=(local)\SQLEXPRESS;Initial Catalog=[
 
 **API VERSIONING**
 
+First, add to api project this nuget packages: 
+- Asp.Versioning.Http
+- Asp.Versioning.Mvc.ApiExplorer
+  
+Then, in the program class:
+
 ```
 builder.Services.AddApiVersioning(opt =>
 {
@@ -195,7 +201,7 @@ builder.Services.AddControllers(options =>
 
 ```
 
-***Class 2 (preference, because use problemDetails pattern***
+***Class 2 (I prefer use this, because use problemDetails pattern :)
 
 ```
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
@@ -319,5 +325,31 @@ public class CustomExceptionHandler(ILogger<CustomExceptionHandler> logger) : IE
         public string property { get; set; }
     }
 
+
+```
+
+
+**GENERIC BASE MODEL RESPONSE**
+
+```
+public class BaseModel
+{
+	public bool success { get; set; }
+	public string message { get; set; }
+}
+
+
+public class GenericBaseModel<T> : BaseModel
+{
+	public T? Data { get; set; }
+	public List<T>? DataList { get; set; }
+}
+
+```
+
+Then, you must call this:
+
+```
+public class CountryDataResponse : GenericBaseModel<CountryData> { }
 
 ```
