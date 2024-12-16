@@ -29,6 +29,42 @@ builder.Services.AddApiVersioning(opt =>
 });
 ```
 
+Finallly, using minimal api, use this to apply versioning to complete api set:
+
+```
+  public class CountyEndpoint : ICarterModule
+  {
+      public void AddRoutes(IEndpointRouteBuilder app)
+      {
+          ApiVersionSet versionSet = app.NewApiVersionSet()
+                             .HasApiVersion(new ApiVersion(1))
+                             //.HasApiVersion(new ApiVersion(2))
+                             //.HasDeprecatedApiVersion
+                             .ReportApiVersions()
+                             .Build();
+
+          RouteGroupBuilder groupPublic = app
+                              .MapGroup("api/v{apiVersion:apiVersion}/public/countys")
+                              .WithApiVersionSet(versionSet)
+                              .WithSummary("Operaciones sobre ...")
+                              .WithOpenApi()
+                              .RequireRateLimiting("Api");
+          //.AddEndpointFilter<ApiKeyAuthorizationEndpointFilter>();   // filtro de api-key
+
+          #region ======================== APIS PUBLICAS ========================
+
+          groupPublic.MapGet("", GetCountys)
+                      .Produces<CountyDTO>(StatusCodes.Status200OK)
+                      .ProducesProblem(StatusCodes.Status400BadRequest)
+                      .ProducesProblem(StatusCodes.Status404NotFound)
+                      .WithSummary("Obtiene lista de...")
+                      .WithDescription("Obtiene lista de...");
+
+	}
+ }
+
+```
+
 **SWAGGER Example**
 
 ```
