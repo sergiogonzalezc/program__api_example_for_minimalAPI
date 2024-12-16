@@ -65,6 +65,23 @@ Finally, using minimal api, use this to apply versioning to complete api set:
 
 ```
 
+
+Or if you use Controllers:
+
+```
+    [Tags("customer")]
+    [ApiController]
+    [Asp.Versioning.ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]/[action]")]
+    public class CustomerController : ControllerBase
+    {
+        private readonly ICustomerService _customerService;
+
+	...
+    }
+
+```
+
 **SWAGGER Example**
 
 ```
