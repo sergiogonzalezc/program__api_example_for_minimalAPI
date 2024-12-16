@@ -66,7 +66,7 @@ Finally, using minimal api, use this to apply versioning to complete api set:
 ```
 
 
-Or if you use Controllers:
+Or if you use MVC Controllers:
 
 ```
     [Tags("customer")]
@@ -75,6 +75,24 @@ Or if you use Controllers:
     [Route("api/v{version:apiVersion}/[controller]/[action]")]
     public class CustomerController : ControllerBase
     {
+        private readonly ICustomerService _customerService;
+
+	...
+    }
+
+```
+
+If you need set a deprecated a group of API, or specific operation, you must set this:
+
+```
+    [Tags("customer")]
+    [ApiController]
+    [Asp.Versioning.ApiVersion("1.0")]
+    [ApiVersion("2.0")]
+    [ApiVersion("1.0", Deprecated = true)]
+    [Route("api/v{version:apiVersion}/[controller]/[action]")]
+    public class CustomerController : ControllerBase
+   {
         private readonly ICustomerService _customerService;
 
 	...
