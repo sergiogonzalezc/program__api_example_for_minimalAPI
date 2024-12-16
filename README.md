@@ -111,6 +111,9 @@ public class CustomerController : ControllerBase
     [AllowAnonymous]
     [HttpGet]
     [ActionName("GetBD")]
+    [ProducesResponseType(typeof(CountryDataResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<CountryDataResponse> GetFromBD()
     {
         return await _customerService.GetList(1);
@@ -122,6 +125,9 @@ public class CustomerController : ControllerBase
     [AllowAnonymous]
     [HttpPost]
     [ActionName("")]
+    [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<bool> Insert()
     {
         var input = new CountryDTO()
