@@ -106,11 +106,12 @@ public class CustomerController : ControllerBase
     }
 
     [Tags("customer")]
-    [EndpointSummary("Test Get")]
-    [EndpointDescription("Geta the data")]
+    [EndpointSummary("Test")]
+    [EndpointDescription("Demoaaa")]
     [AllowAnonymous]
     [HttpGet]
     [ActionName("GetBD")]
+    [Route("{id:int}")]
     [ProducesResponseType(typeof(CountryDataResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
