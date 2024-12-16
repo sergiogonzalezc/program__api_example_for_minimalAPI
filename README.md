@@ -389,3 +389,51 @@ Then, you must call this:
 public class CountryDataResponse : GenericBaseModel<CountryData> { }
 
 ```
+
+
+**My NLog.Config file recomentation (write async log files and split them in separated files each 5 mb)**
+
+```
+<?xml version="1.0" encoding="utf-8" ?>
+<nlog xmlns="http://www.nlog-project.org/schemas/NLog.xsd"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      autoReload="true"
+      throwConfigExceptions="true"
+      internalLogLevel="Info"
+      internalLogFile="c:\internal-log.txt">
+
+	<extensions>
+		<add assembly="NLog.Web.AspNetCore"/>
+	</extensions>
+
+	<targets>
+		<target name="AsyncServerSite" xsi:type="AsyncWrapper">
+			<target xsi:type="File"
+					name="ServerSite"
+					fileName="${basedir}/Logs/nlog-${shortdate}.log"
+					layout="[${uppercase:${level}}] [${longdate}] [${logger}] [${gdc:item=VersionApp}] [${gdc:item=AppName}] [${gdc:item=ProcessID}] ${message} ${exception:format=tostring} url: ${aspnet-request-url} action: ${aspnet-mvc-action}"
+					archiveNumbering="Rolling"
+					archiveAboveSize="524288"
+			  />
+		</target>
+
+	</targets>
+
+	<rules>
+		<logger name="WebSite" minlevel="Trace" writeTo="AsyncServerSite" />
+		<logger name="Microsoft.Hosting.Lifetime" minlevel="Info" writeTo="AsyncServerSite" final="true" />
+
+		<logger name="Microsoft.*" maxlevel="Info" final="true" />
+
+	</rules>
+</nlog>
+```
+
+And Finally, a simpe use can be this:
+
+```
+private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+
+_logger.Info("Hello");
+
+```
