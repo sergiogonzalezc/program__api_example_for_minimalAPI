@@ -422,11 +422,8 @@ First, for troubleshooting in the log files, we recommend create a folder in ***
 	</targets>
 
 	<rules>
-		<logger name="WebSite" minlevel="Trace" writeTo="AsyncServerSite" />
-		<logger name="Microsoft.Hosting.Lifetime" minlevel="Info" writeTo="AsyncServerSite" final="true" />
-
-		<logger name="Microsoft.*" maxlevel="Info" final="true" />
-
+    		<logger name="WebSite" minlevel="Trace" writeTo="AsyncServerSite" />    
+    		<logger name="*" minlevel="Debug" writeTo="AsyncServerSite" />
 	</rules>
 </nlog>
 ```
