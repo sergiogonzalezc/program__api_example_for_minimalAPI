@@ -29,7 +29,7 @@ builder.Services.AddApiVersioning(opt =>
 });
 ```
 
-Finallly, using minimal api, use this to apply versioning to complete api set:
+Finally, using minimal api, use this to apply versioning to complete api set:
 
 ```
   public class CountyEndpoint : ICarterModule
@@ -84,6 +84,71 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+builder.Services.ConfigureSwaggerGen(options =>
+{
+	options.CustomSchemaIds(x => x.FullName);
+});
+```
+
+**Documentation using Controllers**
+
+```
+[Tags("customer")]
+[ApiController]
+[Route("api/[controller]/[action]")]    
+public class CustomerController : ControllerBase
+{
+    private readonly ICustomerService _customerService;
+
+    public CustomerController(ICustomerService customerService)
+    {
+        _customerService = customerService;
+    }
+
+    [Tags("customer")]
+    [EndpointSummary("Test Get")]
+    [EndpointDescription("Geta the data")]
+    [AllowAnonymous]
+    [HttpGet]
+    [ActionName("GetBD")]
+    public async Task<CountryDataResponse> GetFromBD()
+    {
+        return await _customerService.GetList(1);
+    }
+
+    [Tags("customer")]
+    [EndpointSummary("Insert customer")]
+    [EndpointDescription("This operation insert...")]
+    [AllowAnonymous]
+    [HttpPost]
+    [ActionName("")]
+    public async Task<bool> Insert()
+    {
+        var input = new CountryDTO()
+        {
+            code = "11",
+            name = "1111"
+        };
+
+        return await _customerService.SetNew(input);
+    }
+}
+
+```
+
+***Configuring class if you use Api Versioning***
+
+Instead of using this section:
+```
+builder.Services.ConfigureSwaggerGen(options =>
+{
+	options.CustomSchemaIds(x => x.FullName);
+});
+```
+
+You must using this configuring for appling Swagger with api versioning:
+
+```
 builder.Services.ConfigureOptions<ConfigureSwaggerGenOptions>();
 
 WebApplication app = builder.Build();
@@ -237,7 +302,7 @@ builder.Services.AddControllers(options =>
 
 ```
 
-***Class 2 (I prefer use this, because use problemDetails pattern :)
+***Class 2*** (I prefer use this, because use problemDetails pattern :)
 
 ```
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
