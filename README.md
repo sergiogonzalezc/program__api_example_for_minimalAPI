@@ -393,6 +393,8 @@ public class CountryDataResponse : GenericBaseModel<CountryData> { }
 
 **My NLog.Config file recomentation (write async log files and split them in separated files each 5 mb)**
 
+First, for troubleshooting in the log files, we recommend create a folder in ***c:\temp\***
+
 ```
 <?xml version="1.0" encoding="utf-8" ?>
 <nlog xmlns="http://www.nlog-project.org/schemas/NLog.xsd"
@@ -400,7 +402,7 @@ public class CountryDataResponse : GenericBaseModel<CountryData> { }
       autoReload="true"
       throwConfigExceptions="true"
       internalLogLevel="Info"
-      internalLogFile="c:\internal-log.txt">
+      internalLogFile="c:\temp\internal-log.txt">
 
 	<extensions>
 		<add assembly="NLog.Web.AspNetCore"/>
@@ -429,7 +431,7 @@ public class CountryDataResponse : GenericBaseModel<CountryData> { }
 </nlog>
 ```
 
-And Finally, a simpe use can be this:
+And Finally, a simple use can be this:
 
 ```
 private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
