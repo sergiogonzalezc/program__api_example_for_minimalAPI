@@ -543,3 +543,44 @@ private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLog
 _logger.Info("Hello");
 
 ```
+
+
+**Dapper Read with pagination**
+
+```
+// PAGINAR EN SQL con Dapper
+public static string AllUserByName => @"SELECT   
+					  [IdUsuario]
+					  ,[Nombre]
+					  ,[ApellidoPaterno]
+					  ,[ApellidoMaterno]                          
+				      FROM 
+					    [dbo].[Usuario] u (NOLOCK)                                                   
+				      WHERE 
+					    IdUsuario = @Id or 
+					    (
+						UPPER(Nombre) like @NombreAp or 
+						UPPER(ApellidoPaterno) like @NombreAp                                      
+					    )
+				      ORDER BY IdUsuario asc 
+				      OFFSET @PageSize * (@PageNumber-1) ROWS 
+					  FETCH NEXT @PageSize ROWS ONLY";	
+
+
+```
+Then, in C# the filter is this:
+
+
+```
+        public async Task<List<CustomerResponse>> GetCustomer(int id, string nombreAp)
+        {
+            
+            using (IDbConnection con = new SqlConnection(_connString))
+            {
+                con.Open();
+                var output = con.QueryAsync<CustomerResponse>(Querys.readAllData, new { @Id = id, @NombreAp = $"%{nombreAp.ToUpper()}%", @PageSize=10, @PageNumber=2 });
+                return output.Result.ToList();
+            }
+        }
+
+```
